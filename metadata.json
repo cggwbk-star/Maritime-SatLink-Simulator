@@ -1,0 +1,5 @@
+{
+  "name": "Maritime SatLink Simulator",
+  "description": "Interactive simulation of GEO satellite broadband connectivity on ships. Visualizes look angles, tracking logic, and signal blockage caused by ship structures based on location and heading.",
+  "requestFramePermissions": []
+}

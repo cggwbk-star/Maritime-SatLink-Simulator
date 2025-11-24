@@ -43,6 +43,12 @@ export const translations = {
     ship: "SHIP",
     quickSelectSat: "Quick Select Satellite",
     customSat: "Custom / Manual",
+    // New 3D Controls
+    zoomIn: "Zoom In",
+    zoomOut: "Zoom Out",
+    rotate: "Rotate",
+    fullscreen: "Fullscreen",
+    exitFullscreen: "Exit Fullscreen",
   },
   zh: {
     appTitle: "模拟器",
@@ -86,5 +92,11 @@ export const translations = {
     ship: "本船",
     quickSelectSat: "快速选择卫星",
     customSat: "自定义 / 手动",
+    // New 3D Controls
+    zoomIn: "放大",
+    zoomOut: "缩小",
+    rotate: "旋转",
+    fullscreen: "全屏模式",
+    exitFullscreen: "退出全屏",
   }
 };

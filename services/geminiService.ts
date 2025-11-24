@@ -11,6 +11,7 @@ export const getGeminiAdvice = async (
   lang: Language
 ): Promise<string> => {
   try {
+    // @ts-ignore
     const apiKey = process.env.API_KEY;
     if (!apiKey) {
       return lang === 'zh' 

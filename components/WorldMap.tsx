@@ -45,7 +45,7 @@ const WorldMap: React.FC<WorldMapProps> = ({ shipPos, setShipPos, satLng }) => {
 
     // Draw Water
     svg.append("path")
-      .datum({ type: "Sphere" })
+      .datum({ type: "Sphere" } as any)
       .attr("class", "sphere")
       .attr("d", path)
       .attr("fill", "#0f172a")

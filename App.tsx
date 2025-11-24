@@ -1,12 +1,13 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { Coordinates, SignalStatus, DEFAULT_BLOCKAGE_ZONES, LookAngle, BlockageZone } from './types';
 import { calculateLookAngle } from './utils/orbital';
 import Globe3D from './components/Globe3D';
 import DeckEditor from './components/DeckEditor';
 import ShipRadar from './components/ShipRadar';
 import Controls from './components/Controls';
-import { Languages } from 'lucide-react';
+import { Languages, Bot, Loader2 } from 'lucide-react';
 import { translations, Language } from './utils/translations';
+import { getGeminiAdvice } from './services/geminiService';
 
 const App: React.FC = () => {
   // --- State ---
@@ -20,6 +21,10 @@ const App: React.FC = () => {
   
   // Lifted state for blockage zones so they can be edited
   const [blockageZones, setBlockageZones] = useState<BlockageZone[]>(DEFAULT_BLOCKAGE_ZONES);
+
+  // AI Advice State
+  const [aiAdvice, setAiAdvice] = useState<string>('');
+  const [loadingAdvice, setLoadingAdvice] = useState<boolean>(false);
   
   // --- Calculations ---
   const lookAngle: LookAngle = useMemo(() => {
@@ -55,6 +60,20 @@ const App: React.FC = () => {
     if (lookAngle.elevation < 15) return SignalStatus.MARGINAL;
     return SignalStatus.OPTIMAL;
   }, [lookAngle, blockageZones]);
+
+  // --- Effects ---
+  // Debounce AI API calls
+  useEffect(() => {
+    setLoadingAdvice(true);
+    const timer = setTimeout(async () => {
+      const advice = await getGeminiAdvice(shipPos, shipHeading, satLng, lookAngle, signalStatus, lang);
+      setAiAdvice(advice);
+      setLoadingAdvice(false);
+    }, 1500); // 1.5s debounce to avoid hammering API while dragging sliders
+
+    return () => clearTimeout(timer);
+  }, [shipPos, shipHeading, satLng, lookAngle, signalStatus, lang]);
+
 
   const toggleLang = () => {
     setLang(l => l === 'en' ? 'zh' : 'en');
@@ -160,6 +179,23 @@ const App: React.FC = () => {
                       {lookAngle.elevation.toFixed(1)}°
                     </span>
                   </div>
+             </div>
+
+             {/* AI Advice Panel */}
+             <div className="bg-slate-800 rounded-lg border border-slate-700 p-4 shadow-xl flex flex-col gap-2">
+                <h3 className="text-slate-300 font-semibold flex items-center gap-2 text-sm border-b border-slate-700 pb-2">
+                   <Bot size={16} className="text-purple-400" />
+                   {t.aiOfficer}
+                </h3>
+                <div className="min-h-[60px] text-sm text-slate-300 leading-relaxed">
+                   {loadingAdvice ? (
+                     <div className="flex items-center gap-2 text-slate-500 italic">
+                        <Loader2 className="animate-spin" size={14} /> {t.initializing}
+                     </div>
+                   ) : (
+                     aiAdvice
+                   )}
+                </div>
              </div>
           </div>
 

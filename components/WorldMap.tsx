@@ -132,7 +132,7 @@ const WorldMap: React.FC<WorldMapProps> = ({ shipPos, setShipPos, satLng }) => {
        if (shipXY) {
          const link = {type: "LineString", coordinates: [[shipPos.lng, shipPos.lat], [satLng, 0]]};
          svg.append("path")
-            .datum(link)
+            .datum(link as any)
             .attr("d", path)
             .attr("fill", "none")
             .attr("stroke", "#fbbf24") // Amber
